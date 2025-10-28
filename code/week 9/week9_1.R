@@ -55,7 +55,7 @@ filter(!name == "Antarctica") |>
 ggplot() + 
 # The workhorse geom (via sf) to produce maps -- but not our only option:
 geom_sf() +
-theme_map(base_family = "IBM Plex Sans") +
+theme_map() +
 labs(title = "A Map of the World")
 
 # We can easily adjust or experiment with different map projections:
@@ -98,8 +98,8 @@ theme_map(base_family = "IBM Plex Sans") +
 labs(title = "A Map of the World",
      fill = "Fertility Rate in 2015 (Percentile)") +
 theme(legend.position = "bottom",
-      legend.justification = "center") +
-guides(fill = guide_colourbar(title.position = "top"))
+      legend.justification = "center",
+      legend.title.position = "top")
 
 # Quick Exercise ---------------------------------------------------------------
 
@@ -204,6 +204,9 @@ two_maps
 
 # Data comes from the mapcan package:
 
+class(province_territories_2017)
+
+
 province_territories_2017 |> 
   ggplot(aes(x = long, y = lat, group = group)) +
   # Notice something?
@@ -293,14 +296,14 @@ ggplot() +
 geom_sf(fill = "#b7a5d3", colour = "white", linewidth = 0.05) +
 geom_point(colour = "#3f1f69",
            size = 3.5,
-           data = locations |>slice(1),
+           data = locations |> slice(1),
            mapping = aes(x = long, y = lat)) +
 geom_label_repel(family = "Inconsolata",
                  fill = "#3f1f69",
                  colour = "white",
                  size = 4.5,
                  nudge_y = 0.02,
-                 data = locations |>slice(1),
+                 data = locations |> slice(1),
                  mapping = aes(x = long, y = lat,
                                label = site)) +
 theme_void(base_family = "Inconsolata") +
@@ -448,7 +451,7 @@ mapView(amherst_shp, color = "white",
 
 amherst_college <- tibble(site = "Amherst College",
                           address = "Amherst College") |>   
-                    geocode(address = address)
+                   geocode(address = address)
 
 amherst_sf <- st_as_sf(amherst_college, coords = c("long", "lat"),
                        # WGS84 projection:
