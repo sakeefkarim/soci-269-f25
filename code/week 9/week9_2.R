@@ -61,7 +61,6 @@ library(ggdist)
 
 load(url("https://github.com/sakeefkarim/soci-269-f25/raw/refs/heads/main/data/week%209/week9.RData"))
 
-
 # TWO FINAL EXAMPLES ------------------------------------------------------
 
 gapminder |> 
@@ -111,3 +110,57 @@ ggsave(pop_pyramid,
        device = png,
        filename = "population_pyramid.png",
        width = 10, height = 7)
+
+# REPRODUCING PLOTS—EXAMPLES 1 AND 2 --------------------------------------
+
+# 1 -----------------------------------------------------------------------
+
+gapminder |> 
+filter(year %in% c(1957, 2007),
+       !continent == "Oceania") |> 
+ggplot(aes(x = continent, 
+           y = lifeExp, 
+           fill = continent, 
+           colour = continent)) +
+geom_boxplot(alpha = 0.5, 
+             width = 0.5) +
+facet_wrap(~ year) +
+labs(x = "", y = "Life Expectancy in Years") +
+scale_colour_tableau() +
+scale_fill_tableau() +
+theme_bw(base_family = "IBM Plex Sans") +
+theme(panel.grid.minor = element_blank(),
+      strip.text = element_text(size = 13),
+      axis.text = element_text(size = 11),
+      axis.title.y = element_text(size = 12, margin = margin(r = 15)),
+      legend.position = "none",
+      panel.spacing = unit(1, "cm"))
+
+# 2 -----------------------------------------------------------------------
+
+gapminder |> 
+filter(year %in% c(1957, 2007),     
+       !continent == "Oceania") |> 
+ggplot(aes(x = lifeExp, 
+           y = continent, 
+           fill = continent, 
+           colour = continent)) +
+stat_dist_halfeye(alpha = 0.5) +
+scale_colour_brewer(palette = "Dark2") +
+scale_fill_brewer(palette = "Dark2") +
+theme_abyss(base_family = "IBM Plex Sans") +
+facet_wrap(~year, nrow = 2, 
+           scales = "free") +
+labs(title = "Gains in Life Expectancy",
+     subtitle = "1957 to 2007",
+     x = "Life Expectancy") +
+theme(plot.title = element_text(face = "bold"),
+      plot.subtitle = element_text(margin = margin(t = -10)),
+      strip.text = element_text(size = 13),
+      panel.spacing = unit(2, "cm"),
+      axis.title.y = element_blank(),
+      axis.text.y = element_blank(),
+      legend.title = element_blank(),
+      legend.position = "bottom") +
+guides(fill = guide_legend(override.aes = 
+                           list(alpha = 1)))
